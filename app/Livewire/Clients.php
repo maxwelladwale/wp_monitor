@@ -12,9 +12,12 @@ class Clients extends Component
 
     public $clientToDelete = null;
     public $showDeleteModal = false;
+    public $listeners = ['refreshClients' => 'refreshClients'];
 
     public function confirmDelete($clientId)
     {
+
+        dd($clientId);
         $this->clientToDelete = $clientId;
         $this->showDeleteModal = true;
     }
@@ -38,6 +41,11 @@ class Clients extends Component
         }
     }
 
+    //method to refresh clients
+    public function refreshClients()
+    {
+        $this->resetPage();
+    }
     public function render()
     {
         $clients = ClientInfo::paginate(10);

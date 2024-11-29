@@ -19,63 +19,69 @@
 
     <!-- Client Table -->
     <div class="bg-white shadow-md rounded-lg overflow-hidden">
-        <table class="min-w-full">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email
-                    </th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone
-                    </th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Website
-                    </th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Logo</th>
-                    <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions
-                    </th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-                @forelse($clients as $client)
-                    <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-4 py-4 whitespace-nowrap">{{ $client->name }}</td>
-                        <td class="px-4 py-4 whitespace-nowrap">{{ $client->email }}</td>
-                        <td class="px-4 py-4 whitespace-nowrap">{{ $client->phone }}</td>
-                        <td class="px-4 py-4 whitespace-nowrap">
-                            <a href="{{ $client->url }}" target="_blank" class="text-blue-500 hover:underline">
-                                {{ $client->url }}
-                            </a>
-                        </td>
-                        <td class="px-4 py-4 whitespace-nowrap">
-                            @if ($client->logo_path)
-                                <img src="{{ asset('storage/' . $client->logo_path) }}" alt="{{ $client->name }} logo"
-                                    class="h-10 w-10 object-contain rounded">
-                            @else
-                                <span class="text-gray-400">No Logo</span>
-                            @endif
-                        </td>
-                        <td class="px-4 py-4 whitespace-nowrap text-right">
-                            <div class="flex justify-end space-x-2">
-                                <button
-                                    wire:click="$dispatch('open-client-modal', { clientId: {{ $client->client_id }} })"
-                                    class="text-blue-500 hover:text-blue-700 transition-colors" title="Edit Client">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button wire:click="confirmDelete({{ $client->client_id }})"
-                                    class="text-red-500 hover:text-red-700 transition-colors" title="Delete Client">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                @empty
+        <div class="overflow-x-auto">
+            <table class="min-w-full table-auto">
+                <thead class="bg-gray-100">
                     <tr>
-                        <td colspan="6" class="px-4 py-4 text-center text-gray-500">
-                            No clients found. Click "Add Client" to get started.
-                        </td>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name
+                        </th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email
+                        </th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone
+                        </th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Website</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Logo
+                        </th>
+                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions
+                        </th>
                     </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    @forelse($clients as $client)
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 whitespace-nowrap">{{ $client->name }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap">{{ $client->email }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap">{{ $client->phone }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <a href="{{ $client->url }}" target="_blank" class="text-blue-500 hover:underline">
+                                    {{ $client->url }}
+                                </a>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                @if ($client->logo_path)
+                                    <img src="{{ asset('storage/' . $client->logo_path) }}"
+                                        alt="{{ $client->name }} logo" class="h-10 w-10 object-contain rounded">
+                                @else
+                                    <span class="text-gray-400">No Logo</span>
+                                @endif
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap text-right">
+                                <div class="flex justify-end space-x-2">
+                                    <button
+                                        wire:click="$dispatch('open-client-modal', { clientId: '{{ $client->client_id }}' })"
+                                        class="text-blue-500 hover:text-blue-700 transition-colors" title="Edit Client">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button wire:click="confirmDelete('{{ $client->client_id }}')"
+                                        class="text-red-500 hover:text-red-700 transition-colors" title="Delete Client">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </td>
+
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="px-4 py-4 text-center text-gray-500">
+                                No clients found. Click "Add Client" to get started.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Pagination -->
