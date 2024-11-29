@@ -10,18 +10,37 @@ class Clients extends Component
 {
     use WithPagination;
 
-    protected $listeners = ['clientUpdated' => '$refresh'];
+    public $clientToDelete = null;
+    public $showDeleteModal = false;
 
-    public function delete($clientId)
+    public function confirmDelete($clientId)
     {
-        $client = ClientInfo::findOrFail($clientId);
-        $client->delete();
-        session()->flash('message', 'Client deleted successfully.');
+        $this->clientToDelete = $clientId;
+        $this->showDeleteModal = true;
+    }
+
+    public function cancelDelete()
+    {
+        $this->clientToDelete = null;
+        $this->showDeleteModal = false;
+    }
+
+    public function deleteClient()
+    {
+        if ($this->clientToDelete) {
+            $client = ClientInfo::findOrFail($this->clientToDelete);
+            $client->delete();
+
+            session()->flash('message', 'Client deleted successfully.');
+
+            $this->clientToDelete = null;
+            $this->showDeleteModal = false;
+        }
     }
 
     public function render()
     {
-        $clients = ClientInfo::paginate(2);
+        $clients = ClientInfo::paginate(10);
         return view('livewire.clients', compact('clients'));
     }
 }
