@@ -11,27 +11,57 @@ class ClientModal extends Component
     use WithFileUploads;
 
     public $clientId;
-    public $name;
-    public $email;
-    public $phone;
-    public $url;
-    public $logoPath;
+    public $name = '';
+    public $email = '';
+    public $phone = '';
+    public $url = '';
+    public $logoPath = null;
     public $modalOpen = false;
     public $isEdit = false;
 
     protected $listeners = [
-        'edit-client' => 'openEditModal'
+        'open-client-modal' => 'openModal'
     ];
 
     protected function rules()
     {
         return [
-            'name' => 'required',
-            'email' => 'required|email',
-            'phone' => 'required',
-            'url' => 'required|url',
-            'logoPath' => 'nullable|image',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+            'url' => 'required|url|max:255',
+            'logoPath' => 'nullable|image|max:1024',
         ];
+    }
+
+    public function openModal($clientId = null)
+    {
+        $this->resetFields();
+
+        if ($clientId) {
+            $client = ClientInfo::findOrFail($clientId);
+            $this->clientId = $client->client_id;
+            $this->name = $client->name;
+            $this->email = $client->email;
+            $this->phone = $client->phone;
+            $this->url = $client->url;
+            $this->isEdit = true;
+        }
+
+        $this->modalOpen = true;
+    }
+
+    public function resetFields()
+    {
+        $this->reset([
+            'clientId',
+            'name',
+            'email',
+            'phone',
+            'url',
+            'logoPath',
+            'isEdit'
+        ]);
     }
 
     public function store()
@@ -43,36 +73,24 @@ class ClientModal extends Component
             'email' => $this->email,
             'phone' => $this->phone,
             'url' => $this->url,
-            'logo_path' => $this->logoPath 
-                ? $this->logoPath->store('logos', 'public') 
-                : null,
         ];
 
-        if ($this->isEdit) {
-            $client = ClientInfo::find($this->clientId);
-            $client->update($data);
-        } else {
-            ClientInfo::create($data);
+        // Handle logo upload
+        if ($this->logoPath) {
+            $data['logo_path'] = $this->logoPath->store('logos', 'public');
         }
 
-        $this->modalOpen = false;
-        $this->dispatch('clientUpdated');
-        session()->flash('message', $this->isEdit 
-            ? 'Client updated successfully.' 
-            : 'Client created successfully.');
-    }
+        if ($this->isEdit) {
+            $client = ClientInfo::findOrFail($this->clientId);
+            $client->update($data);
+            $message = 'Client updated successfully.';
+        } else {
+            ClientInfo::create($data);
+            $message = 'Client created successfully.';
+        }
 
-    public function openEditModal($clientId)
-    {
-        $client = ClientInfo::find($clientId);
-        $this->clientId = $client->client_id;
-        $this->name = $client->name;
-        $this->email = $client->email;
-        $this->phone = $client->phone;
-        $this->url = $client->url;
-        $this->logoPath = $client->logo_path;
-        $this->modalOpen = true;
-        $this->isEdit = true;
+        session()->flash('message', $message);
+        $this->modalOpen = false;
     }
 
     public function render()
