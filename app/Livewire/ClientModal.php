@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\ClientInfo;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -39,6 +40,7 @@ class ClientModal extends Component
         $this->resetFields();
 
         if ($clientId) {
+            dd($clientId);
             $client = ClientInfo::findOrFail($clientId);
             $this->clientId = $client->client_id;
             $this->name = $client->name;
@@ -68,7 +70,15 @@ class ClientModal extends Component
     {
         $this->validate();
 
+        // If editing, don't generate a new UUID, use the existing client_id
+        if (!$this->isEdit) {
+            $clientId = Str::uuid();
+        } else {
+            $clientId = $this->clientId;
+        }
+
         $data = [
+            'client_id' => $clientId,
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
@@ -90,6 +100,10 @@ class ClientModal extends Component
         }
 
         session()->flash('message', $message);
+        
+        // Emit an event to notify the Clients component to refresh
+        $this->dispatch('refreshClients');
+
         $this->modalOpen = false;
     }
 

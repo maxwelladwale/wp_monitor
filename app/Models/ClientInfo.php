@@ -14,8 +14,9 @@ class ClientInfo extends Model
     use HasFactory;
 
    protected $table = 'client_info';
-
    protected $primaryKey = 'client_id';
+   public $incrementing = false;
+   protected $keyType = 'string';
 
     protected $fillable = [
         'client_id',
