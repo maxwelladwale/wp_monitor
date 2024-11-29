@@ -10,12 +10,17 @@
     <!-- Clients Header with Add Button -->
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-semibold text-gray-800">Clients</h2>
+        <div class="flex items-center justify-between py-4">
+            <input type="text" wire:model="search" class="border px-3 py-2 rounded" placeholder="Search Clients">
+            <button wire:click="filterClients" class="bg-blue-500 text-white px-4 py-2 rounded">Search</button>
+        </div>
         <button wire:click="$dispatch('open-client-modal')"
             class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center">
             <i class="fas fa-plus mr-2"></i>
             Add Client
         </button>
     </div>
+
 
     <!-- Client Table -->
     <div class="bg-white shadow-md rounded-lg overflow-hidden">
@@ -34,8 +39,7 @@
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Logo
                         </th>
                         <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Actions
-                        </th>
+                            Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -45,9 +49,8 @@
                             <td class="px-4 py-4 whitespace-nowrap">{{ $client->email }}</td>
                             <td class="px-4 py-4 whitespace-nowrap">{{ $client->phone }}</td>
                             <td class="px-4 py-4 whitespace-nowrap">
-                                <a href="{{ $client->url }}" target="_blank" class="text-blue-500 hover:underline">
-                                    {{ $client->url }}
-                                </a>
+                                <a href="{{ $client->url }}" target="_blank"
+                                    class="text-blue-500 hover:underline">{{ $client->url }}</a>
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap">
                                 @if ($client->logo_path)
@@ -60,17 +63,16 @@
                             <td class="px-4 py-4 whitespace-nowrap text-right">
                                 <div class="flex justify-end space-x-2">
                                     <button
-                                        wire:click="$dispatch('open-client-modal', { clientId: '{{ $client->client_id }}' })"
+                                        wire:click="$dispatch('open-client-modal', { clientId: {{ $client->client_id }} })"
                                         class="text-blue-500 hover:text-blue-700 transition-colors" title="Edit Client">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <button wire:click="confirmDelete('{{ $client->client_id }}')"
+                                    <button wire:click="confirmDelete({{ $client->client_id }})"
                                         class="text-red-500 hover:text-red-700 transition-colors" title="Delete Client">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </div>
                             </td>
-
                         </tr>
                     @empty
                         <tr>
@@ -83,6 +85,7 @@
             </table>
         </div>
     </div>
+
 
     <!-- Pagination -->
     <div class="mt-4">

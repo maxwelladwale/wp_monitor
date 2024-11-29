@@ -10,6 +10,22 @@
         <!-- Font Awesome CDN -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
+<!-- Add in the head section -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
+
+    {{-- <!-- jQuery (required for DataTables) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- DataTables JS (required) -->
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
+<!-- DataTables CSS (optional but recommended for styling) -->
+<link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet"> --}}
+
+   
     @livewireStyles
 </head>
 <body class="bg-gray-100">
@@ -50,7 +66,8 @@
     <footer class="bg-blue-600 text-white text-center py-4 mt-6">
         <p>&copy; {{ date('Y') }} My Laravel App. All rights reserved.</p>
     </footer>
-    
+ 
     @livewireScripts
+    @yield('scripts')
 </body>
 </html>

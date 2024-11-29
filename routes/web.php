@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientInfoController;
+use App\Http\Controllers\clients\clienttables;
 
 Route::get('/', function () {
     return view('welcome');
@@ -10,10 +11,9 @@ Route::get('/', function () {
 
 Route::resource('clients', ClientInfoController::class);
 
-//Route::get('/clients', [ClientInfoController::class, 'index']);
-//Route::get('/clients/create', [ClientInfoController::class, 'create']);
-//Route::post('/clients', [ClientInfoController::class, 'store']);
-//Route::get('/clients/{client}', [ClientInfoController::class, 'show']);
-//Route::get('/clients/{client}/edit', [ClientInfoController::class, 'edit']);
-//Route::patch('/clients/{client}', [ClientInfoController::class, 'update']);
-//Route::delete('/clients/{client}', [ClientInfoController::class, 'destroy']);
+// Auth::routes();
+
+Route::get('/newclients', [clienttables::class, 'index'])->name('newclients.index');
+Route::get('/newclients/data', [clienttables::class, 'getClients'])->name('newclients.get');
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
